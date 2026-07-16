@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --background: #4a0999;
+  --foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* The phone view itself is white — purple is reserved for contrast:
+     primary actions, selection, and emphasis. The electric violet
+     canvas lives one level up, behind the phone (--background), on
+     desktop's letterboxed margin. */
+  --color-surface: #ffffff;
+  --color-surface-2: #ffffff;
+  --color-surface-3: #f2e6ff;
+  --color-border-subtle: #e6d6fa;
+  --color-primary: #4a0c9e;
+  --color-primary-dim: #350873;
+  --color-lavender: #eedbff;
+  --color-accent: #2f7d52;
+  --color-accent-dim: #245f3f;
+  --color-warning: #9c5a2a;
+  --color-danger: #b03a34;
+  --color-text: #232538;
+  --color-text-muted: #666977;
+  --color-text-faint: #93969f;
+
+  /* Categorical chart palette (validated: dataviz skill's
+     scripts/validate_palette.js, light mode, surface #ffffff — lightness
+     band, chroma floor, CVD adjacent-pair separation and contrast all
+     pass). Fixed order, never cycled. */
+  --color-cat-1: #6b4fa0;
+  --color-cat-2: #0a8f82;
+  --color-cat-3: #b8863b;
+  --color-cat-4: #3e6fa8;
+  --color-cat-5: #b1495a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle);
+  border-radius: 999px;
+}
