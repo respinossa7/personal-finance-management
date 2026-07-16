@@ -4,6 +4,7 @@ import { getDemoUserId } from "@/lib/demo/session";
 import { FinanceRepository } from "@/lib/repository/FinanceRepository";
 import { RunwayCalculator, InsightAgent } from "@/domain";
 import { computeThresholdSnapshot } from "@/lib/demo/intelligence";
+import { narrateInsight } from "@/lib/langchain/narrator";
 import { RunwayHero } from "@/components/RunwayHero";
 import { CommitmentBreakdown } from "@/components/CommitmentBreakdown";
 import { InsightCard } from "@/components/InsightCard";
@@ -30,6 +31,20 @@ export default async function DashboardPage() {
   const dismissedIds = await repo.getDismissedInsightIds(userId);
   const visibleInsights = freshInsights.filter((i) => !dismissedIds.has(i.id));
 
+  // Insight Narrator: rephrases each deterministic insight conversationally.
+  // The rule-based message (and every number in it) is the source of truth;
+  // on any Narrator failure we fall back to it rather than hide the insight.
+  const narratedInsights = await Promise.all(
+    visibleInsights.map(async (insight) => {
+      try {
+        const message = await narrateInsight(insight);
+        return { ...insight, message };
+      } catch {
+        return insight;
+      }
+    })
+  );
+
   const pendingCount = commitments.filter((c) => c.status === "detected").length;
 
   return (
@@ -49,12 +64,12 @@ export default async function DashboardPage() {
         </Link>
       )}
 
-      {visibleInsights.length > 0 && (
+      {narratedInsights.length > 0 && (
         <section className="flex flex-col gap-3">
           <p className="px-1 text-xs font-medium uppercase tracking-wide text-text-faint">
             Insights
           </p>
-          {visibleInsights.map((insight) => (
+          {narratedInsights.map((insight) => (
             <InsightCard key={insight.id} insight={insight} />
           ))}
         </section>
