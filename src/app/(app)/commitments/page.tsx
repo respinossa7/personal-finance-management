@@ -46,7 +46,7 @@ export default async function CommitmentsPage() {
             <div>
               <p className="text-xs text-text-faint">Committed every month</p>
               <p className="mt-0.5 text-xl font-semibold text-text">
-                AED {monthlyTotal.toLocaleString()}
+                ${monthlyTotal.toLocaleString()}
               </p>
             </div>
             <p className="text-xs text-text-faint">
@@ -81,7 +81,7 @@ export default async function CommitmentsPage() {
                     </p>
                   </div>
                   <p className="flex-none text-sm font-medium text-text">
-                    AED {c.amount.toLocaleString()}
+                    ${c.amount.toLocaleString()}
                   </p>
                 </div>
               );

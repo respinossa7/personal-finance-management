@@ -35,7 +35,7 @@ export default async function WaterfallPage() {
                 {i + 1}
               </span>
               <span className="flex-1 text-text-muted">{step.label}</span>
-              <span className="text-text">AED {step.amount.toLocaleString()}</span>
+              <span className="text-text">${step.amount.toLocaleString()}</span>
             </li>
           ))}
           <li className="flex items-center gap-3 text-sm">
@@ -43,7 +43,7 @@ export default async function WaterfallPage() {
               ✓
             </span>
             <span className="flex-1 text-text-muted">Rest released as safe-to-spend</span>
-            <span className="text-accent">AED {total.toLocaleString()} moved</span>
+            <span className="text-accent">${total.toLocaleString()} moved</span>
           </li>
         </ol>
       </div>

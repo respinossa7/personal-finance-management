@@ -1,5 +1,5 @@
 /**
- * Domain types for Wio Flow.
+ * Domain types for Runway.
  * Mirrors the Supabase schema in supabase/migrations/0001_init.sql.
  * Kept framework-agnostic so the domain layer never imports Next.js or Supabase types.
  */

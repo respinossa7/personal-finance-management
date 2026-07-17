@@ -19,7 +19,7 @@ export function GoalProgressView({
   projection: GoalProjectionResult;
   catchUp: GoalTradeoffResult;
   lowerTargetAmount: number;
-  reflector: { monthsCovered: number; totalRemittanceSent: number; totalGoalFunded: number };
+  reflector: { monthsCovered: number; totalTransfersSent: number; totalGoalFunded: number };
 }) {
   const pct = Math.min(100, Math.round((fundedAmount / goal.targetAmount) * 100));
 
@@ -38,7 +38,7 @@ export function GoalProgressView({
           </span>
         </div>
         <p className="text-2xl font-semibold text-text">
-          AED {fundedAmount.toLocaleString()}{" "}
+          ${fundedAmount.toLocaleString()}{" "}
           <span className="text-sm font-normal text-text-muted">
             of {goal.targetAmount.toLocaleString()} · {pct}%
           </span>
@@ -50,7 +50,7 @@ export function GoalProgressView({
           />
         </div>
         <p className="mt-2 text-xs text-text-faint">
-          Target: {formatDateLabel(goal.targetDate)} · AED {goal.monthlyContribution.toLocaleString()}/month
+          Target: {formatDateLabel(goal.targetDate)} · ${goal.monthlyContribution.toLocaleString()}/month
           committed
         </p>
       </div>
@@ -77,9 +77,9 @@ export function GoalProgressView({
       <div className="rounded-2xl border border-border-subtle bg-surface-2 p-4">
         <p className="mb-1 text-sm font-medium text-text">Your Quarter</p>
         <p className="text-sm leading-relaxed text-text-muted">
-          Over the last {reflector.monthsCovered} months, Autopilot moved AED{" "}
-          {(reflector.totalRemittanceSent + reflector.totalGoalFunded).toLocaleString()} on your
-          behalf — AED {reflector.totalRemittanceSent.toLocaleString()} home to Kerala and AED{" "}
+          Over the last {reflector.monthsCovered} months, Autopilot moved $
+          {(reflector.totalTransfersSent + reflector.totalGoalFunded).toLocaleString()} on your
+          behalf — ${reflector.totalTransfersSent.toLocaleString()} in recurring transfers and $
           {reflector.totalGoalFunded.toLocaleString()} into {goal.name}. Every run stayed inside
           your safe-to-spend floor; nothing was skipped.
         </p>

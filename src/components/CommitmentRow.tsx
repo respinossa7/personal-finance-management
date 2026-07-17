@@ -49,7 +49,7 @@ export function CommitmentRow({ commitment }: { commitment: Commitment }) {
           </div>
         </div>
         <p className="flex-none text-sm font-medium text-text">
-          AED {commitment.amount.toLocaleString()}
+          ${commitment.amount.toLocaleString()}
         </p>
       </div>
       <div className="flex justify-end gap-2">

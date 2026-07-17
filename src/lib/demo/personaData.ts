@@ -3,9 +3,9 @@ import { Account, Commitment, Goal, Transaction, WaterfallRun } from "@/domain";
 /**
  * Deterministic seed generator for the demo persona: the "Remittance
  * Anchor" archetype from the segmentation model (large fixed obligation
- * home, thin local discretionary margin). Sophia is a UAE expat sending
- * money to family in Kerala every month, six years into her stay, with no
- * idea if she'll be here for one more year or twenty.
+ * home, thin local discretionary margin). Alex is a Mexican professional
+ * living in the US, sending money home to family in Mexico every month,
+ * six months into building a house down-payment fund.
  *
  * Deliberately deterministic (no Math.random) so re-running the seed script
  * always produces the same demo state — important when you're about to walk
@@ -13,16 +13,16 @@ import { Account, Commitment, Goal, Transaction, WaterfallRun } from "@/domain";
  */
 
 export const DEMO_USER = {
-  name: "Sophia",
-  email: "sophia.demo@wio-autopilot.example",
+  name: "Alex",
+  email: "alex.demo@runway.example",
   persona: "remittance_anchor" as const,
 };
 
 const MONTHS_2026 = [0, 1, 2, 3, 4, 5]; // Jan - Jun 2026
 const REMITTANCE_AMOUNTS = [3000, 3050, 3120, 3200, 3280, 3350]; // ~11.7% creep over 6 months
 const REMITTANCE_DAYS = [3, 2, 4, 3, 3, 4];
-const DEWA_AMOUNTS = [380, 520, 410, 610, 395, 540]; // deliberately volatile — should NOT be detected as a commitment
-const ANGHAMI_MONTHS = [3, 4, 5]; // Apr, May, Jun only — a *new* subscription, still pending confirmation
+const UTILITY_AMOUNTS = [380, 520, 410, 610, 395, 540]; // deliberately volatile — should NOT be detected as a commitment
+const NEW_STREAMING_MONTHS = [3, 4, 5]; // Apr, May, Jun only — a *new* subscription, still pending confirmation
 
 interface SeedIds {
   currentAccountId: string;
@@ -41,9 +41,9 @@ export function buildAccounts(userId: string, ids: SeedIds): Account[] {
     {
       id: ids.currentAccountId,
       userId,
-      name: "Wio Current Account",
+      name: "Current Account",
       type: "current",
-      currency: "AED",
+      currency: "$",
       balance: 9800,
       interestRatePct: 0,
       isLiquid: true,
@@ -53,7 +53,7 @@ export function buildAccounts(userId: string, ids: SeedIds): Account[] {
       userId,
       name: "Saving Space — House Down Payment",
       type: "savings_space",
-      currency: "AED",
+      currency: "$",
       balance: 22000,
       interestRatePct: 6,
       isLiquid: true,
@@ -63,7 +63,7 @@ export function buildAccounts(userId: string, ids: SeedIds): Account[] {
       userId,
       name: "Saving Space — Rainy Day (unallocated)",
       type: "savings_space",
-      currency: "AED",
+      currency: "$",
       balance: 16500,
       interestRatePct: 0,
       isLiquid: true,
@@ -71,9 +71,9 @@ export function buildAccounts(userId: string, ids: SeedIds): Account[] {
     {
       id: ids.investAccountId,
       userId,
-      name: "Wio Invest",
+      name: "Investment Account",
       type: "invest",
-      currency: "AED",
+      currency: "$",
       balance: 21000,
       interestRatePct: 0,
       isLiquid: false,
@@ -116,35 +116,35 @@ export function buildTransactions(userId: string, currentAccountId: string): Tra
   };
 
   for (const m of MONTHS_2026) {
-    push(m, 1, 19500, "credit", "SALARY - TECHCORP FZ LLC", "income");
-    push(m, 28, 6500, "debit", "EMAAR PROPERTIES RENT PAYMENT", "housing");
-    push(m, REMITTANCE_DAYS[m], REMITTANCE_AMOUNTS[m], "debit", "LULU EXCHANGE NRI REMITTANCE KERALA", "remittance");
+    push(m, 1, 19500, "credit", "SALARY - TECHCORP INC", "income");
+    push(m, 28, 6500, "debit", "RENT PAYMENT - PROPERTY MANAGEMENT CO", "housing");
+    push(m, REMITTANCE_DAYS[m], REMITTANCE_AMOUNTS[m], "debit", "MONEY TRANSFER SERVICE - MEXICO", "remittance");
     push(m, 5, 45, "debit", "NETFLIX.COM", "subscriptions");
-    push(m, 6, 299, "debit", "FITNESS FIRST GYM MEMBERSHIP", "subscriptions");
+    push(m, 6, 299, "debit", "FITNESS CLUB MEMBERSHIP", "subscriptions");
     push(m, 8, 19.99, "debit", "SPOTIFY AB", "subscriptions");
-    push(m, 10, 350, "debit", "ETISALAT MOBILE BILL", "utilities");
-    push(m, 12, DEWA_AMOUNTS[m], "debit", "DEWA ELECTRICITY WATER", "utilities");
+    push(m, 10, 350, "debit", "MOBILE PHONE BILL", "utilities");
+    push(m, 12, UTILITY_AMOUNTS[m], "debit", "ELECTRICITY AND WATER UTILITY", "utilities");
     push(m, 1, 3200, "debit", "TRANSFER TO SAVING SPACE - HOUSE DOWN PAYMENT", "savings_transfer");
 
-    if (ANGHAMI_MONTHS.includes(m)) {
-      push(m, 9, 15.99, "debit", "ANGHAMI MUSIC SUBSCRIPTION", "subscriptions");
+    if (NEW_STREAMING_MONTHS.includes(m)) {
+      push(m, 9, 15.99, "debit", "SOUNDWAVE MUSIC SUBSCRIPTION", "subscriptions");
     }
 
     // Discretionary spend — intentionally irregular amounts/days so the
     // detector correctly does NOT group these into commitments.
-    push(m, 4, 120 + m * 3, "debit", "CARREFOUR MARKET", "groceries");
-    push(m, 11, 145 + m * 2, "debit", "SPINNEYS", "groceries");
-    push(m, 18, 160 - m * 2, "debit", "CARREFOUR MARKET", "groceries");
-    push(m, 25, 130 + m * 4, "debit", "WAITROSE", "groceries");
-    push(m, 7, 90 + m * 5, "debit", "PICKL RESTAURANT", "dining");
-    push(m, 15, 150 - m * 3, "debit", "ZAFRAN INDIAN BISTRO", "dining");
-    push(m, 22, 110 + m * 2, "debit", "TIM HORTONS", "dining");
-    push(m, 2, 28, "debit", "CAREEM RIDE", "transport");
-    push(m, 9, 32, "debit", "CAREEM RIDE", "transport");
-    push(m, 16, 25, "debit", "RTA SALIK TOPUP", "transport");
-    push(m, 23, 40, "debit", "CAREEM RIDE", "transport");
-    push(m, 13, 180 - m * 4, "debit", "AMAZON.AE", "shopping");
-    push(m, 27, 95 + m * 3, "debit", "NOON.COM", "shopping");
+    push(m, 4, 120 + m * 3, "debit", "GROCERY STORE", "groceries");
+    push(m, 11, 145 + m * 2, "debit", "SUPERMARKET", "groceries");
+    push(m, 18, 160 - m * 2, "debit", "GROCERY STORE", "groceries");
+    push(m, 25, 130 + m * 4, "debit", "FARMERS MARKET", "groceries");
+    push(m, 7, 90 + m * 5, "debit", "RESTAURANT", "dining");
+    push(m, 15, 150 - m * 3, "debit", "BISTRO", "dining");
+    push(m, 22, 110 + m * 2, "debit", "COFFEE SHOP", "dining");
+    push(m, 2, 28, "debit", "RIDESHARE", "transport");
+    push(m, 9, 32, "debit", "RIDESHARE", "transport");
+    push(m, 16, 25, "debit", "TOLL AND PARKING", "transport");
+    push(m, 23, 40, "debit", "RIDESHARE", "transport");
+    push(m, 13, 180 - m * 4, "debit", "ONLINE MARKETPLACE", "shopping");
+    push(m, 27, 95 + m * 3, "debit", "ONLINE SHOPPING", "shopping");
   }
 
   return tx.sort((a, b) => Date.parse(a.postedAt) - Date.parse(b.postedAt));
@@ -162,27 +162,27 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
     {
       id: "commit_rent",
       userId,
-      name: "Emaar Properties — Rent",
+      name: "Property Management Co — Rent",
       type: "rent",
       amount: 6500,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 28,
       confidence: 0.97,
       status: "confirmed",
-      sourceTransactionIds: idsFor("emaar"),
+      sourceTransactionIds: idsFor("rent payment"),
       detectedAt: now,
     },
     {
-      id: "commit_remittance_kerala",
+      id: "commit_remittance_mexico",
       userId,
-      name: "Lulu Exchange — Remittance (Kerala)",
+      name: "Money Transfer Service — Mexico",
       type: "remittance",
       amount: 3350,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 3,
       confidence: 0.91,
       status: "confirmed",
-      sourceTransactionIds: idsFor("lulu exchange"),
+      sourceTransactionIds: idsFor("money transfer service"),
       detectedAt: now,
     },
     {
@@ -191,7 +191,7 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
       name: "Netflix",
       type: "subscription",
       amount: 45,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 5,
       confidence: 0.98,
       status: "confirmed",
@@ -201,14 +201,14 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
     {
       id: "commit_gym",
       userId,
-      name: "Fitness First — Gym Membership",
+      name: "Fitness Club Membership",
       type: "subscription",
       amount: 299,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 6,
       confidence: 0.96,
       status: "confirmed",
-      sourceTransactionIds: idsFor("fitness first"),
+      sourceTransactionIds: idsFor("fitness club"),
       detectedAt: now,
     },
     {
@@ -217,7 +217,7 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
       name: "Spotify",
       type: "subscription",
       amount: 19.99,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 8,
       confidence: 0.98,
       status: "confirmed",
@@ -225,29 +225,29 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
       detectedAt: now,
     },
     {
-      id: "commit_etisalat",
+      id: "commit_mobile",
       userId,
-      name: "Etisalat",
+      name: "Mobile Phone Bill",
       type: "other_recurring",
       amount: 350,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 10,
       confidence: 0.93,
       status: "confirmed",
-      sourceTransactionIds: idsFor("etisalat"),
+      sourceTransactionIds: idsFor("mobile phone"),
       detectedAt: now,
     },
     {
-      id: "commit_anghami",
+      id: "commit_soundwave",
       userId,
-      name: "Anghami Music",
+      name: "Soundwave Music",
       type: "subscription",
       amount: 15.99,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 9,
       confidence: 0.74,
       status: "detected", // new pattern, only 3 occurrences — awaiting one-tap confirmation
-      sourceTransactionIds: idsFor("anghami"),
+      sourceTransactionIds: idsFor("soundwave"),
       detectedAt: now,
     },
     {
@@ -256,7 +256,7 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
       name: 'Fund "House Down Payment"',
       type: "savings_goal",
       amount: 3200,
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: 1,
       confidence: 1,
       status: "confirmed",
@@ -291,9 +291,9 @@ export function buildHistoricalWaterfallRuns(
         {
           step: {
             type: "remittance" as const,
-            refId: "commit_remittance_kerala",
+            refId: "commit_remittance_mexico",
             amount: REMITTANCE_AMOUNTS[m],
-            label: "Send Lulu Exchange — Remittance (Kerala)",
+            label: "Send Money Transfer Service — Mexico",
           },
           fromAccountId: currentAccountId,
           amount: REMITTANCE_AMOUNTS[m],

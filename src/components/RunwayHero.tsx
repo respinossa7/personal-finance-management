@@ -25,7 +25,7 @@ export function RunwayHero({
       </p>
       <div className="mt-1.5 flex items-baseline gap-2">
         <span className="text-[2.5rem] font-semibold leading-none tracking-tight text-text">
-          AED {runway.safeToSpendToday.toLocaleString()}
+          ${runway.safeToSpendToday.toLocaleString()}
         </span>
         <span className="text-sm text-text-muted">/day</span>
       </div>
@@ -45,7 +45,7 @@ export function RunwayHero({
         <div className="rounded-xl bg-surface-3 px-3.5 py-3">
           <p className="text-[11px] text-text-faint">Liquid assets</p>
           <p className="mt-0.5 text-xl font-semibold text-text">
-            AED {runway.liquidAssets.toLocaleString()}
+            ${runway.liquidAssets.toLocaleString()}
           </p>
         </div>
       </div>
@@ -66,7 +66,7 @@ export function RunwayHero({
         </div>
         <div className="mt-1.5 flex items-baseline justify-between">
           <p className="text-sm font-medium text-text">
-            AED {threshold.spent.toLocaleString()}{" "}
+            ${threshold.spent.toLocaleString()}{" "}
             <span className="font-normal text-text-faint">
               of {threshold.target.toLocaleString()}
             </span>

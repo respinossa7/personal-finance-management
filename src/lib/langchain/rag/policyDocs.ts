@@ -1,5 +1,5 @@
 /**
- * Wio Flow's product-policy knowledge base. Small and hand-written for this
+ * Runway's product-policy knowledge base. Small and hand-written for this
  * demo, but structured the way a real one would be: short, self-contained
  * passages a retriever can match independently, each traceable to a single
  * policy so an answer can cite exactly which one it drew from.
@@ -15,31 +15,31 @@ export const POLICY_DOCS: PolicyDoc[] = [
     id: "safe-to-spend-definition",
     title: "How safe-to-spend is calculated",
     content:
-      "Safe-to-spend-today is never a precise line — it's a conservative floor. It equals confirmed funds, minus detected upcoming commitments still due this month, minus the customer's safe-to-spend floor, minus an 8% uncertainty buffer, divided by the days remaining in the month. Wio Flow always promises 'at least this much,' never an exact figure, so the product under-promises rather than over-promises.",
+      "Safe-to-spend-today is never a precise line — it's a conservative floor. It equals confirmed funds, minus detected upcoming commitments still due this month, minus the customer's safe-to-spend floor, minus an 8% uncertainty buffer, divided by the days remaining in the month. Runway always promises 'at least this much,' never an exact figure, so the product under-promises rather than over-promises.",
   },
   {
     id: "reversibility-invariant",
     title: "Which automated moves can be undone",
     content:
-      "Internal moves — sweeps between a customer's own Wio accounts and Saving Spaces — are undoable for 24 hours after execution. Anything irreversible, specifically investments and international remittance transfers, is never fully automated: it is staged with a veto window and requires explicit confirmation before it executes, and once executed it cannot be undone through the app.",
+      "Internal moves — sweeps between a customer's own accounts and Saving Spaces — are undoable for 24 hours after execution. Anything irreversible, specifically investments and international remittance transfers, is never fully automated: it is staged with a veto window and requires explicit confirmation before it executes, and once executed it cannot be undone through the app.",
   },
   {
     id: "saving-space-yield",
     title: "Saving Space interest rate",
     content:
-      "Money moved into a Saving Space earns approximately 6% per annum, compared to 0% sitting in a non-interest current account. The idle-cash insight recommends moving balances above AED 15,000 sitting in a zero-rate liquid account into a Saving Space to capture this yield.",
+      "Money moved into a Saving Space earns approximately 6% per annum, compared to 0% sitting in a non-interest current account. The idle-cash insight recommends moving balances above $15,000 sitting in a zero-rate liquid account into a Saving Space to capture this yield.",
   },
   {
     id: "threshold-tracker-condition",
-    title: "The AED 5,000 Threshold Tracker",
+    title: "The $5,000 Threshold Tracker",
     content:
-      "The Threshold Tracker follows a customer's live progress toward an AED 5,000 spend condition (for example, a fee waiver or benefit tied to monthly spend). It only routes spending the customer already planned toward that condition — it never nudges the customer to spend more than they intended — and it stops tracking once the threshold is met. There are no streaks or gamification here.",
+      "The Threshold Tracker follows a customer's live progress toward a $5,000 spend condition (for example, a fee waiver or benefit tied to monthly spend). It only routes spending the customer already planned toward that condition — it never nudges the customer to spend more than they intended — and it stops tracking once the threshold is met. There are no streaks or gamification here.",
   },
   {
-    id: "wps-salary-transfer-gate",
-    title: "Salary-transfer eligibility (WPS)",
+    id: "salary-transfer-eligibility-gate",
+    title: "Salary-transfer eligibility",
     content:
-      "The salary-day waterfall automation is available to customers whose salary is transferred into Wio via the UAE's Wage Protection System (WPS), with a minimum recognized monthly salary transfer of AED 15,000. This is the cohort the waterfall (remittance, then goals, then safe-to-spend release) launches with, since their income is fully visible at the source.",
+      "The salary-day waterfall automation is available to customers whose salary is deposited directly and verifiably each month, with a minimum recognized monthly salary transfer of $15,000. This is the cohort the waterfall (recurring transfers, then goals, then safe-to-spend release) launches with, since their income is fully visible at the source.",
   },
   {
     id: "subscription-cancellation-policy",

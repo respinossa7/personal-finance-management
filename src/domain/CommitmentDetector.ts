@@ -31,20 +31,18 @@ export class CommitmentDetector {
     "icloud",
     "prime",
     "playstation",
-    "du ",
-    "etisalat",
-    "anghami",
+    "mobile",
+    "telecom",
+    "streaming",
   ];
   private static readonly REMITTANCE_KEYWORDS = [
     "exchange",
     "remit",
     "western union",
-    "lulu exchange",
-    "al ansari",
     "wise",
     "transfer to",
-    "kerala",
-    "nri",
+    "wire transfer",
+    "money transfer",
   ];
   private static readonly RENT_KEYWORDS = ["rent", "properties", "real estate", "landlord"];
   private static readonly SCHOOL_KEYWORDS = ["school", "nursery", "academy", "education"];
@@ -121,7 +119,7 @@ export class CommitmentDetector {
       name: group.merchantLabel,
       type,
       amount: round2(avgAmount),
-      currency: "AED",
+      currency: "$",
       cadenceDayOfMonth: avgDay,
       confidence: round2(confidence),
       status: "detected",

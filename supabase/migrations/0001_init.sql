@@ -1,4 +1,4 @@
--- Wio Autopilot — demo schema
+-- Runway — demo schema
 -- Mirrors src/domain/types.ts. This is an interview demo, not a production
 -- bank system: RLS policies below are intentionally permissive (scoped to a
 -- single seeded demo user, no real money, no real Supabase Auth) so the
@@ -20,7 +20,7 @@ create table if not exists accounts (
   user_id uuid not null references users(id) on delete cascade,
   name text not null,
   type text not null check (type in ('current', 'savings_space', 'invest', 'external')),
-  currency text not null default 'AED',
+  currency text not null default '$',
   balance numeric(14, 2) not null default 0,
   interest_rate_pct numeric(5, 2) not null default 0,
   is_liquid boolean not null default true
@@ -48,7 +48,7 @@ create table if not exists commitments (
     type in ('rent', 'remittance', 'subscription', 'school_fees', 'savings_goal', 'other_recurring')
   ),
   amount numeric(14, 2) not null,
-  currency text not null default 'AED',
+  currency text not null default '$',
   cadence_day_of_month int not null,
   confidence numeric(4, 3) not null default 0,
   status text not null default 'detected' check (status in ('detected', 'confirmed', 'rejected', 'muted')),

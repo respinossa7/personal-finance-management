@@ -4,9 +4,9 @@ import { Transaction } from "@/domain";
  * Mocked outputs for the ML layers the proposal specifies (Layer 2:
  * segmentation, forecasting, next-best-action ranking, anomaly detection) —
  * deliberately hard-coded rather than modelled, per the demo's scope. Each
- * export here stands in for a trained model's output on Sophia's data, shaped
- * exactly like what that model would emit, so the UI layer doesn't know or
- * care that nothing underneath is actually trained.
+ * export here stands in for a trained model's output on the demo customer's
+ * data, shaped exactly like what that model would emit, so the UI layer
+ * doesn't know or care that nothing underneath is actually trained.
  *
  * Anything that's a straightforward aggregation of real ledger data (category
  * norms, savings rate, goal projections) is computed for real elsewhere
@@ -166,7 +166,7 @@ export function computeThisMonthSnapshot(
   };
 }
 
-// ---- Threshold Tracker (AED 5,000 spend condition) ------------------------
+// ---- Threshold Tracker ($5,000 spend condition) ---------------------------
 
 export const THRESHOLD_TARGET = 5000;
 
@@ -201,7 +201,7 @@ export function computeThresholdSnapshot(now: Date = new Date()): ThresholdSnaps
     overshoot: spent >= THRESHOLD_TARGET,
     routingMessage:
       remaining > 0
-        ? `Your DEWA bill (~AED 540) and the Amazon.ae order already in your basket cover the remaining AED ${remaining.toLocaleString()} with no extra spending.`
+        ? `Your electricity bill (~$540) and the online order already in your basket cover the remaining $${remaining.toLocaleString()} with no extra spending.`
         : "Condition met for this cycle — no need to spend any more to keep the top rate.",
   };
 }

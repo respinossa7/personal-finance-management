@@ -13,7 +13,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="flex items-center justify-between border-b border-border-subtle px-5 py-3">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white">
-            W
+            R
           </div>
           <span className="text-sm font-medium text-text">{DEMO_USER.name}</span>
         </div>
