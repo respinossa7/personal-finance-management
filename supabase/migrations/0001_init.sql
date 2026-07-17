@@ -11,7 +11,7 @@ create table if not exists users (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email text not null unique,
-  persona text not null default 'steady_saver',
+  persona text not null default 'remittance_anchor',
   created_at timestamptz not null default now()
 );
 

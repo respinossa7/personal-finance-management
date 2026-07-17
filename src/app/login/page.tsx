@@ -40,8 +40,9 @@ export default function LoginPage() {
             Demo mode
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-text-muted">
-            You&apos;ll enter as <span className="font-medium text-text">Alex</span> — a salaried
-            professional six months into building a house down-payment fund.
+            You&apos;ll enter as <span className="font-medium text-text">Alex</span> — a Mexican
+            professional living in the US, sending money home to family every month while building
+            a house down-payment fund.
           </p>
           <div className="mt-3.5 flex flex-col gap-2 border-t border-border-subtle pt-3.5">
             {DEMO_FACTS.map(({ icon: Icon, label }) => (

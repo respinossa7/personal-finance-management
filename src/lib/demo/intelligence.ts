@@ -24,7 +24,7 @@ export interface SegmentMembership {
 /** Soft GMM-style membership — never a hard label, per the proposal's
  * "78% Threshold Optimiser is a better product primitive than a hard label." */
 export const SEGMENT_MEMBERSHIP: SegmentMembership[] = [
-  { name: "Steady Saver", membershipPct: 82 },
+  { name: "Remittance Anchor", membershipPct: 82 },
   { name: "Threshold Optimiser", membershipPct: 13 },
   { name: "Passive Accumulator", membershipPct: 5 },
 ];
@@ -49,9 +49,9 @@ export const MONEY_PROFILE = {
       evidence: "16% of income funded automatically every month",
     },
     {
-      id: "goal_focused",
-      label: "Goal-focused",
-      evidence: "One clear savings goal, funded automatically every month",
+      id: "remittance_anchored",
+      label: "Remittance-anchored",
+      evidence: "Largest recurring outflow after rent, sent home every month",
     },
   ] satisfies MoneyProfileTrait[],
   cohortSize: 1240,

@@ -142,6 +142,6 @@ export interface RunwaySnapshot {
 export interface DemoUser {
   id: string;
   name: string;
-  persona: "steady_saver";
+  persona: "remittance_anchor";
   email: string;
 }

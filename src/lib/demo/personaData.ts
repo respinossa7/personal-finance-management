@@ -1,10 +1,11 @@
 import { Account, Commitment, Goal, Transaction, WaterfallRun } from "@/domain";
 
 /**
- * Deterministic seed generator for the demo persona: the "Steady Saver"
- * archetype from the segmentation model (predictable income, one clear
- * savings goal, everyday spend). Alex is a salaried professional six months
- * into building a house down-payment fund.
+ * Deterministic seed generator for the demo persona: the "Remittance
+ * Anchor" archetype from the segmentation model (large fixed obligation
+ * home, thin local discretionary margin). Alex is a Mexican professional
+ * living in the US, sending money home to family in Mexico every month,
+ * six months into building a house down-payment fund.
  *
  * Deliberately deterministic (no Math.random) so re-running the seed script
  * always produces the same demo state — important when you're about to walk
@@ -14,10 +15,12 @@ import { Account, Commitment, Goal, Transaction, WaterfallRun } from "@/domain";
 export const DEMO_USER = {
   name: "Alex",
   email: "alex.demo@runway.example",
-  persona: "steady_saver" as const,
+  persona: "remittance_anchor" as const,
 };
 
 const MONTHS_2026 = [0, 1, 2, 3, 4, 5]; // Jan - Jun 2026
+const REMITTANCE_AMOUNTS = [3000, 3050, 3120, 3200, 3280, 3350]; // ~11.7% creep over 6 months
+const REMITTANCE_DAYS = [3, 2, 4, 3, 3, 4];
 const UTILITY_AMOUNTS = [380, 520, 410, 610, 395, 540]; // deliberately volatile — should NOT be detected as a commitment
 const NEW_STREAMING_MONTHS = [3, 4, 5]; // Apr, May, Jun only — a *new* subscription, still pending confirmation
 
@@ -115,6 +118,7 @@ export function buildTransactions(userId: string, currentAccountId: string): Tra
   for (const m of MONTHS_2026) {
     push(m, 1, 19500, "credit", "SALARY - TECHCORP INC", "income");
     push(m, 28, 6500, "debit", "RENT PAYMENT - PROPERTY MANAGEMENT CO", "housing");
+    push(m, REMITTANCE_DAYS[m], REMITTANCE_AMOUNTS[m], "debit", "MONEY TRANSFER SERVICE - MEXICO", "remittance");
     push(m, 5, 45, "debit", "NETFLIX.COM", "subscriptions");
     push(m, 6, 299, "debit", "FITNESS CLUB MEMBERSHIP", "subscriptions");
     push(m, 8, 19.99, "debit", "SPOTIFY AB", "subscriptions");
@@ -166,6 +170,19 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
       confidence: 0.97,
       status: "confirmed",
       sourceTransactionIds: idsFor("rent payment"),
+      detectedAt: now,
+    },
+    {
+      id: "commit_remittance_mexico",
+      userId,
+      name: "Money Transfer Service — Mexico",
+      type: "remittance",
+      amount: 3350,
+      currency: "$",
+      cadenceDayOfMonth: 3,
+      confidence: 0.91,
+      status: "confirmed",
+      sourceTransactionIds: idsFor("money transfer service"),
       detectedAt: now,
     },
     {
@@ -251,7 +268,8 @@ export function buildCommitments(userId: string, transactions: Transaction[]): C
 
 /**
  * Six months of real audit-trail history (Jan-Jun 2026) for the salary-day
- * waterfall: the house-fund contribution, every month. This is what lets the
+ * waterfall: the remittance send (creeping in line with REMITTANCE_AMOUNTS)
+ * and the house-fund contribution, every month. This is what lets the
  * Progress Reflector narrative (Insights Hub → Goal Progress) summarise
  * "what Autopilot actually did" from real ledger facts instead of invented
  * copy — the undo window on every one of these has long since closed.
@@ -270,6 +288,17 @@ export function buildHistoricalWaterfallRuns(
       userId,
       triggeredBy: "salary_day_simulation" as const,
       moves: [
+        {
+          step: {
+            type: "remittance" as const,
+            refId: "commit_remittance_mexico",
+            amount: REMITTANCE_AMOUNTS[m],
+            label: "Send Money Transfer Service — Mexico",
+          },
+          fromAccountId: currentAccountId,
+          amount: REMITTANCE_AMOUNTS[m],
+          executedAt,
+        },
         {
           step: {
             type: "goal_contribution" as const,

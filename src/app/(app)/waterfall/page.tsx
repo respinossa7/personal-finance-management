@@ -18,8 +18,8 @@ export default async function WaterfallPage() {
       <div>
         <h1 className="text-lg font-semibold text-text">Salary Day</h1>
         <p className="mt-1 text-xs text-text-muted">
-          The moment salary lands is the one moment of maximum agency. Transfers
-          and savings happen automatically, before spending can —
+          The moment salary lands is the one moment of maximum agency. Saving
+          and sending money home happen automatically, before spending can —
           by default, not by willpower. Every run is reversible for 24 hours.
         </p>
       </div>

@@ -30,7 +30,7 @@ export function RunwayHero({
         <span className="text-sm text-text-muted">/day</span>
       </div>
       <p className="mt-2 text-xs text-text-faint">
-        {runway.daysRemainingInMonth} days left this month, after rent, bills,
+        {runway.daysRemainingInMonth} days left this month, after rent, remittance,
         subscriptions and your savings plan
       </p>
 
