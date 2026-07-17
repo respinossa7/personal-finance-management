@@ -1,6 +1,6 @@
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
-import { FinanceRepository } from "@/lib/repository/FinanceRepository";
+import type { UserBundle } from "@/lib/repository/FinanceRepository";
 import { PlanService, RunwayCalculator } from "@/domain";
 import { searchPolicyDocs } from "./rag";
 
@@ -10,18 +10,19 @@ import { searchPolicyDocs } from "./rag";
  * PlanService, never generated. The model's hallucination surface is
  * confined to phrasing (the proposal's core architecture rule).
  *
- * Scoped to a single userId per call site since each chat request is a
- * fresh set of tool instances bound to the requesting customer.
+ * Takes a `getBundle` loader rather than a userId/repository directly, so
+ * this — and every agent built on top of it — can run against either a live
+ * Supabase-backed FinanceRepository (production) or a fixed in-memory
+ * fixture (the eval harness), with no code path diverging between the two.
  */
-export function createFinanceTools(userId: string) {
-  const repo = new FinanceRepository();
+export function createFinanceTools(getBundle: () => Promise<UserBundle>) {
   const runwayCalculator = new RunwayCalculator();
   const planService = new PlanService(runwayCalculator);
 
   const getRunwaySnapshot = tool(
     async () => {
-      const { accounts, commitments, plan } = await repo.getUserBundle(userId);
-      return runwayCalculator.computeRunway(accounts, commitments, plan.safeToSpendFloor);
+      const { accounts, commitments, plan } = await getBundle();
+      return JSON.stringify(runwayCalculator.computeRunway(accounts, commitments, plan.safeToSpendFloor));
     },
     {
       name: "get_runway_snapshot",
@@ -33,15 +34,24 @@ export function createFinanceTools(userId: string) {
 
   const listCommitments = tool(
     async () => {
-      const { commitments } = await repo.getUserBundle(userId);
-      return commitments
-        .filter((c) => c.status === "confirmed")
-        .map((c) => ({
-          name: c.name,
-          type: c.type,
-          amountAed: c.amount,
-          dueDayOfMonth: c.cadenceDayOfMonth,
-        }));
+      const { commitments } = await getBundle();
+      // Stringified explicitly: a plain array of objects whose fields happen
+      // to include a `type` key (e.g. "rent", "remittance") is misdetected by
+      // LangChain's content-block heuristic as pre-formatted message content
+      // (it checks only for the presence of a `type` key, not its value) and
+      // gets forwarded to Anthropic's API unstringified, where those aren't
+      // valid content-block types — the model then sees an effectively empty
+      // tool result. Returning a string sidesteps that entirely.
+      return JSON.stringify(
+        commitments
+          .filter((c) => c.status === "confirmed")
+          .map((c) => ({
+            name: c.name,
+            type: c.type,
+            amountAed: c.amount,
+            dueDayOfMonth: c.cadenceDayOfMonth,
+          }))
+      );
     },
     {
       name: "list_commitments",
@@ -53,12 +63,14 @@ export function createFinanceTools(userId: string) {
 
   const computeGoalTradeoff = tool(
     async ({ target_amount, target_date, funded_amount }) => {
-      const { accounts, commitments, plan } = await repo.getUserBundle(userId);
-      return planService.computeGoalTradeoff(
-        { targetAmount: target_amount, targetDate: target_date, fundedAmount: funded_amount ?? 0 },
-        accounts,
-        commitments,
-        plan.safeToSpendFloor
+      const { accounts, commitments, plan } = await getBundle();
+      return JSON.stringify(
+        planService.computeGoalTradeoff(
+          { targetAmount: target_amount, targetDate: target_date, fundedAmount: funded_amount ?? 0 },
+          accounts,
+          commitments,
+          plan.safeToSpendFloor
+        )
       );
     },
     {
