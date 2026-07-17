@@ -22,7 +22,7 @@ export function createFinanceTools(getBundle: () => Promise<UserBundle>) {
   const getRunwaySnapshot = tool(
     async () => {
       const { accounts, commitments, plan } = await getBundle();
-      return runwayCalculator.computeRunway(accounts, commitments, plan.safeToSpendFloor);
+      return JSON.stringify(runwayCalculator.computeRunway(accounts, commitments, plan.safeToSpendFloor));
     },
     {
       name: "get_runway_snapshot",
@@ -35,14 +35,23 @@ export function createFinanceTools(getBundle: () => Promise<UserBundle>) {
   const listCommitments = tool(
     async () => {
       const { commitments } = await getBundle();
-      return commitments
-        .filter((c) => c.status === "confirmed")
-        .map((c) => ({
-          name: c.name,
-          type: c.type,
-          amountAed: c.amount,
-          dueDayOfMonth: c.cadenceDayOfMonth,
-        }));
+      // Stringified explicitly: a plain array of objects whose fields happen
+      // to include a `type` key (e.g. "rent", "remittance") is misdetected by
+      // LangChain's content-block heuristic as pre-formatted message content
+      // (it checks only for the presence of a `type` key, not its value) and
+      // gets forwarded to Anthropic's API unstringified, where those aren't
+      // valid content-block types — the model then sees an effectively empty
+      // tool result. Returning a string sidesteps that entirely.
+      return JSON.stringify(
+        commitments
+          .filter((c) => c.status === "confirmed")
+          .map((c) => ({
+            name: c.name,
+            type: c.type,
+            amountAed: c.amount,
+            dueDayOfMonth: c.cadenceDayOfMonth,
+          }))
+      );
     },
     {
       name: "list_commitments",
@@ -55,11 +64,13 @@ export function createFinanceTools(getBundle: () => Promise<UserBundle>) {
   const computeGoalTradeoff = tool(
     async ({ target_amount, target_date, funded_amount }) => {
       const { accounts, commitments, plan } = await getBundle();
-      return planService.computeGoalTradeoff(
-        { targetAmount: target_amount, targetDate: target_date, fundedAmount: funded_amount ?? 0 },
-        accounts,
-        commitments,
-        plan.safeToSpendFloor
+      return JSON.stringify(
+        planService.computeGoalTradeoff(
+          { targetAmount: target_amount, targetDate: target_date, fundedAmount: funded_amount ?? 0 },
+          accounts,
+          commitments,
+          plan.safeToSpendFloor
+        )
       );
     },
     {

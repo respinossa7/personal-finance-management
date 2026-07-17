@@ -22,13 +22,17 @@ export const GOLDEN_SET: GoldenScenario[] = [
     name: "cash-flow-safe-to-spend",
     turns: ["What is safe for me to spend today?"],
     expectedRoute: "cash_flow_interpreter",
+    // Only safeToSpendToday is asserted: the question asks specifically
+    // about today's spend, and requiring the model to also volunteer the
+    // runway-in-months figure it wasn't asked for was over-constraining —
+    // that's covered separately by goal-tradeoff-context-dependent-followup.
     groundTruth: (bundle) => {
       const runway = new RunwayCalculator().computeRunway(
         bundle.accounts,
         bundle.commitments,
         bundle.plan.safeToSpendFloor
       );
-      return [runway.safeToSpendToday, runway.runwayMonths];
+      return [runway.safeToSpendToday];
     },
   },
   {
