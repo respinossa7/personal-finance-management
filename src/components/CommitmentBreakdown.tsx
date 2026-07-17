@@ -21,7 +21,7 @@ export function CommitmentBreakdown({ commitments }: { commitments: Commitment[]
     <div className="rounded-2xl border border-border-subtle bg-surface-2 p-4">
       <div className="mb-3 flex items-baseline justify-between">
         <p className="text-sm font-medium text-text">Where your recurring payments go</p>
-        <p className="text-xs text-text-faint">AED {grandTotal.toLocaleString()}/mo</p>
+        <p className="text-xs text-text-faint">${grandTotal.toLocaleString()}/mo</p>
       </div>
       <div className="flex flex-col gap-3">
         {rows.map((r) => (
@@ -34,7 +34,7 @@ export function CommitmentBreakdown({ commitments }: { commitments: Commitment[]
                 />
                 {r.label}
               </span>
-              <span className="text-text-faint">AED {r.amount.toLocaleString()}</span>
+              <span className="text-text-faint">${r.amount.toLocaleString()}</span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-surface-3">
               <div

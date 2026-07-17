@@ -33,7 +33,7 @@ export default async function InsightsPage() {
   const moves = waterfallRuns.flatMap((r) => r.moves);
   const reflector = {
     monthsCovered: new Set(waterfallRuns.map((r) => r.executedAt.slice(0, 7))).size,
-    totalRemittanceSent: moves
+    totalTransfersSent: moves
       .filter((m) => m.step.type === "remittance")
       .reduce((sum, m) => sum + m.amount, 0),
     totalGoalFunded: moves

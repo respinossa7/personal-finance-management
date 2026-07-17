@@ -102,7 +102,7 @@ export function WaterfallControls() {
             {run.moves.map((m, i) => (
               <li key={i} className="flex justify-between text-xs text-text-muted">
                 <span>{m.step.label}</span>
-                <span className="text-text">AED {m.amount.toLocaleString()}</span>
+                <span className="text-text">${m.amount.toLocaleString()}</span>
               </li>
             ))}
           </ul>

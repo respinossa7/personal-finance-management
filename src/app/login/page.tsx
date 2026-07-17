@@ -25,9 +25,9 @@ export default function LoginPage() {
     <main className="flex flex-1 flex-col justify-between p-6">
       <div className="mt-14 flex flex-col items-center text-center">
         <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary shadow-sm shadow-primary/25">
-          <span className="text-xl font-semibold text-white">W</span>
+          <span className="text-xl font-semibold text-white">R</span>
         </div>
-        <h1 className="text-[1.75rem] font-semibold tracking-tight text-text">Wio Flow</h1>
+        <h1 className="text-[1.75rem] font-semibold tracking-tight text-text">Runway</h1>
         <p className="mt-3 max-w-[19rem] text-sm leading-relaxed text-text-muted">
           A personal finance system that runs your plan by default, and only
           interrupts you when there&apos;s a real decision to make.
@@ -40,8 +40,8 @@ export default function LoginPage() {
             Demo mode
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-text-muted">
-            You&apos;ll enter as <span className="font-medium text-text">Sophia</span> — a UAE
-            expat sending money home to Kerala every month, six years into an uncertain stay.
+            You&apos;ll enter as <span className="font-medium text-text">Alex</span> — a salaried
+            professional six months into building a house down-payment fund.
           </p>
           <div className="mt-3.5 flex flex-col gap-2 border-t border-border-subtle pt-3.5">
             {DEMO_FACTS.map(({ icon: Icon, label }) => (
@@ -55,7 +55,7 @@ export default function LoginPage() {
           </div>
         </div>
         <Button fullWidth onClick={enterDemo} disabled={loading}>
-          {loading ? "Entering..." : "Enter demo as Sophia"}
+          {loading ? "Entering..." : "Enter demo as Alex"}
           {!loading && <ArrowRight size={16} />}
         </Button>
       </div>

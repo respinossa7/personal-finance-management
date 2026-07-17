@@ -46,7 +46,7 @@ export function GoalRemedySwitcher({
       <div className="rounded-xl bg-surface-3/60 px-3 py-3 text-sm leading-relaxed text-text-muted">
         {selected === "stretch" && (
           <>
-            At AED {monthlyContribution.toLocaleString()}/month, you&apos;ll reach this goal
+            At ${monthlyContribution.toLocaleString()}/month, you&apos;ll reach this goal
             around <span className="text-text">{projectedDateLabel}</span> —{" "}
             {monthsBehind} months later than your {targetDateLabel} target. Nothing changes; the
             waterfall keeps running as-is.
@@ -55,16 +55,16 @@ export function GoalRemedySwitcher({
         {selected === "catchup" && (
           <>
             Hitting {targetDateLabel} means raising your contribution to{" "}
-            <span className="text-text">AED {catchUpMonthly.toLocaleString()}/month</span> — about
-            AED {Math.max(0, Math.round(catchUpMonthly - monthlyContribution)).toLocaleString()}{" "}
+            <span className="text-text">${catchUpMonthly.toLocaleString()}/month</span> — about
+            ${Math.max(0, Math.round(catchUpMonthly - monthlyContribution)).toLocaleString()}{" "}
             more than today. This would be shown against your runway before you confirm it.
           </>
         )}
         {selected === "lower" && (
           <>
-            Keeping AED {monthlyContribution.toLocaleString()}/month and hitting{" "}
+            Keeping ${monthlyContribution.toLocaleString()}/month and hitting{" "}
             {targetDateLabel} means resetting the target to{" "}
-            <span className="text-text">AED {lowerTargetAmount.toLocaleString()}</span> instead.
+            <span className="text-text">${lowerTargetAmount.toLocaleString()}</span> instead.
           </>
         )}
       </div>

@@ -73,7 +73,7 @@ export class InsightAgent {
           id: `insight_remit_${r.id}`,
           userId: ctx.userId,
           type: "remittance_cost_creep",
-          message: `Your transfer to "${r.name}" has crept up ${(increasePct * 100).toFixed(0)}% since you started it. A scheduled corridor transfer could lock in a better rate.`,
+          message: `Your transfer to "${r.name}" has crept up ${(increasePct * 100).toFixed(0)}% since you started it. A scheduled transfer could lock in a better rate.`,
           action: {
             label: "Review transfer",
             kind: "move_funds",
@@ -98,7 +98,7 @@ export class InsightAgent {
         id: `insight_idle_${idle.id}`,
         userId: ctx.userId,
         type: "idle_cash",
-        message: `AED ${idle.balance.toFixed(0)} is sitting in ${idle.name} earning 0%. Moving it to a Saving Space could earn ~6% p.a.`,
+        message: `$${idle.balance.toFixed(0)} is sitting in ${idle.name} earning 0%. Moving it to a Saving Space could earn ~6% p.a.`,
         action: {
           label: "Move to Saving Space",
           kind: "move_funds",

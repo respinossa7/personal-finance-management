@@ -27,9 +27,9 @@ export function ThresholdTrackerCard({ snapshot }: { snapshot: ThresholdSnapshot
         </div>
 
         <p className="text-2xl font-semibold text-text">
-          AED {snapshot.spent.toLocaleString()}{" "}
+          ${snapshot.spent.toLocaleString()}{" "}
           <span className="text-sm font-normal text-text-muted">
-            of AED {snapshot.target.toLocaleString()}
+            of ${snapshot.target.toLocaleString()}
           </span>
         </p>
         <p className="mt-1 text-xs text-text-faint">{snapshot.daysLeft} days left this cycle</p>

@@ -32,7 +32,7 @@ export function ThisMonthView({
           Day {snapshot.dayOfMonth} of {snapshot.daysInMonth}
         </p>
         <p className="mt-1 text-2xl font-semibold text-text">
-          AED {snapshot.totalSoFar.toLocaleString()}{" "}
+          ${snapshot.totalSoFar.toLocaleString()}{" "}
           <span className="text-sm font-normal text-text-muted">spent so far</span>
         </p>
         <p
@@ -43,16 +43,16 @@ export function ThisMonthView({
         >
           {delta === 0
             ? "Right on your usual pace"
-            : `About AED ${delta.toLocaleString()} ${ahead ? "ahead of" : "behind"} your usual pace`}
+            : `About $${delta.toLocaleString()} ${ahead ? "ahead of" : "behind"} your usual pace`}
         </p>
 
         <div className="mt-4 rounded-xl bg-surface-3/60 px-3 py-2.5">
           <p className="text-[11px] text-text-faint">Projected month-end total</p>
           <p className="text-sm text-text">
-            AED {snapshot.projection.low.toLocaleString()} – AED{" "}
+            ${snapshot.projection.low.toLocaleString()} – $
             {snapshot.projection.high.toLocaleString()}{" "}
             <span className="text-text-faint">
-              (expected ~AED {snapshot.projection.expected.toLocaleString()})
+              (expected ~${snapshot.projection.expected.toLocaleString()})
             </span>
           </p>
         </div>
@@ -94,8 +94,8 @@ export function ThisMonthView({
                 />
               </div>
               <div className="mt-1 flex justify-between text-[11px] text-text-faint">
-                <span>AED {c.thisMonthSoFar.toLocaleString()} so far</span>
-                <span>usual: AED {c.sixMonthNorm.toLocaleString()}/mo</span>
+                <span>${c.thisMonthSoFar.toLocaleString()} so far</span>
+                <span>usual: ${c.sixMonthNorm.toLocaleString()}/mo</span>
               </div>
             </div>
           ))}
@@ -105,7 +105,7 @@ export function ThisMonthView({
       {hot.deviationPct > 15 && (
         <div className="flex flex-col gap-2 rounded-2xl border border-warning/25 bg-warning/[0.07] p-4">
           <p className="text-sm text-text">
-            {hot.label} is {hot.deviationPct}% above your usual pace — AED{" "}
+            {hot.label} is {hot.deviationPct}% above your usual pace — $
             {Math.round(hot.thisMonthSoFar - (hot.sixMonthNorm * snapshot.dayOfMonth) / snapshot.daysInMonth)} over.
           </p>
           <CategoryActionButton amount={200} goalName={goalName} />

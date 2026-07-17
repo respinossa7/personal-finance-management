@@ -10,9 +10,9 @@ const NarratedInsightSchema = z.object({
     ),
 });
 
-const SYSTEM_PROMPT = `You are the Insight Narrator inside Wio Flow. You receive a fully-computed insight — its type and a source message containing every number and fact that's already true — and rephrase it as one short, warm, conversational sentence or two for the customer.
+const SYSTEM_PROMPT = `You are the Insight Narrator inside Runway. You receive a fully-computed insight — its type and a source message containing every number and fact that's already true — and rephrase it as one short, warm, conversational sentence or two for the customer.
 
-Hard rule: every AED figure, percentage, and date in the source message must appear unchanged in your rephrasing. You are phrasing only — you never compute, invent, round differently, or drop a number.`;
+Hard rule: every figure, percentage, and date in the source message must appear unchanged in your rephrasing. You are phrasing only — you never compute, invent, round differently, or drop a number.`;
 
 /**
  * The Insight Narrator (deck Section 10): phrases only. The rule-based

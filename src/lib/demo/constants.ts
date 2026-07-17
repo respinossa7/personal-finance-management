@@ -8,4 +8,4 @@ export const INVEST_ACCOUNT_ID = "55555555-5555-4555-8555-555555555555";
 export const PLAN_ID = "66666666-6666-4666-8666-666666666666";
 export const GOAL_ID = "77777777-7777-4777-8777-777777777777";
 
-export const DEMO_SESSION_COOKIE = "wio_autopilot_demo_user";
+export const DEMO_SESSION_COOKIE = "runway_demo_user";

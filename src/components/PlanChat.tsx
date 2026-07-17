@@ -11,7 +11,7 @@ interface ChatMessage {
 }
 
 const SUGGESTIONS = [
-  "I want a house down-payment of AED 250,000 by June 2030",
+  "I want a house down-payment of $250,000 by June 2030",
   "What's safe to spend today?",
   "What are my recurring commitments?",
 ];

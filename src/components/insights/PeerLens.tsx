@@ -26,7 +26,7 @@ export function PeerLens({ savingsRatePct }: { savingsRatePct: number }) {
           </div>
           <p className="text-sm text-text">
             See how your spending and saving compare to customers with a similar profile —
-            similar income, similar remittance pattern, similar household setup.
+            similar income, similar spending pattern, similar household setup.
           </p>
           <p className="text-xs text-text-faint">
             Opt-in, both directions: seeing your cohort means contributing your aggregated data

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wio Flow — Demo",
+  title: "Runway — Demo",
   description: "A personal finance system that acts, not just reports.",
 };
 

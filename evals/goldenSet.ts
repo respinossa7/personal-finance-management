@@ -44,7 +44,7 @@ export const GOLDEN_SET: GoldenScenario[] = [
   },
   {
     name: "goal-tradeoff-single-turn",
-    turns: ["I want to save AED 90,000 for a wedding by 2029-01-01"],
+    turns: ["I want to save $90,000 for a wedding by 2029-01-01"],
     expectedRoute: "goal_planner",
     groundTruth: (bundle) => {
       const planService = new PlanService(new RunwayCalculator());
@@ -60,7 +60,7 @@ export const GOLDEN_SET: GoldenScenario[] = [
   {
     name: "goal-tradeoff-context-dependent-followup",
     turns: [
-      "I want to save AED 40,000 for a car by 2027-06-01",
+      "I want to save $40,000 for a car by 2027-06-01",
       "how much would that take out of my runway?",
     ],
     expectedRoute: "goal_planner",

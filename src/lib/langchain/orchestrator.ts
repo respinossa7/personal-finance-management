@@ -16,7 +16,7 @@ const RouteSchema = z.object({
     ),
 });
 
-const ROUTER_PROMPT = `You are the Orchestrator for Wio Flow's Plan chat. You never answer the customer directly — you read the conversation and decide which single specialist should take this turn:
+const ROUTER_PROMPT = `You are the Orchestrator for Runway's Plan chat. You never answer the customer directly — you read the conversation and decide which single specialist should take this turn:
 
 - goal_planner: the customer describes a life goal, wants a funded schedule, or is discussing an existing goal's trade-offs.
 - cash_flow_interpreter: the customer asks what's safe to spend, about runway, or wants their commitments/forecast explained in plain language.

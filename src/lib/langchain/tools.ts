@@ -48,7 +48,7 @@ export function createFinanceTools(getBundle: () => Promise<UserBundle>) {
           .map((c) => ({
             name: c.name,
             type: c.type,
-            amountAed: c.amount,
+            amount: c.amount,
             dueDayOfMonth: c.cadenceDayOfMonth,
           }))
       );
@@ -78,9 +78,9 @@ export function createFinanceTools(getBundle: () => Promise<UserBundle>) {
       description:
         "Given a savings goal (target amount, target date, amount already funded), compute the exact monthly contribution required and what that does to the customer's runway. Call this before stating any monthly contribution figure or feasibility claim.",
       schema: z.object({
-        target_amount: z.number().describe("Total AED amount needed for the goal"),
+        target_amount: z.number().describe("Total amount needed for the goal"),
         target_date: z.string().describe("ISO date (YYYY-MM-DD) the goal should be reached by"),
-        funded_amount: z.number().optional().describe("AED already saved toward this goal so far (default 0)"),
+        funded_amount: z.number().optional().describe("Amount already saved toward this goal so far (default 0)"),
       }),
     }
   );
@@ -102,7 +102,7 @@ export function createPolicySearchTool() {
     {
       name: "search_product_policies",
       description:
-        "Search Wio Flow's product-policy knowledge base (safe-to-spend rules, reversibility/undo windows, interest rates, thresholds, subscription-cancellation rules, automation pause behavior). Call this before answering any question about how the product works or what it guarantees — never answer a policy question from memory.",
+        "Search Runway's product-policy knowledge base (safe-to-spend rules, reversibility/undo windows, interest rates, thresholds, subscription-cancellation rules, automation pause behavior). Call this before answering any question about how the product works or what it guarantees — never answer a policy question from memory.",
       schema: z.object({
         query: z.string().describe("A natural-language description of the policy question to search for"),
       }),
