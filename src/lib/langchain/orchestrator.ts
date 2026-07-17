@@ -1,5 +1,6 @@
 import { Annotation, StateGraph, START, END, MessagesAnnotation } from "@langchain/langgraph";
 import { z } from "zod";
+import type { UserBundle } from "@/lib/repository/FinanceRepository";
 import { getChatModel } from "./model";
 import { createGoalPlannerAgent } from "./agents/goalPlanner";
 import { createCashFlowInterpreterAgent } from "./agents/cashFlowInterpreter";
@@ -34,10 +35,10 @@ const OrchestratorState = Annotation.Root({
  * a third specialist is a new node plus a route-schema enum value, not a
  * rewrite — policy_qa was added this way, alongside the original two.
  */
-export function createOrchestrator(userId: string) {
+export function createOrchestrator(getBundle: () => Promise<UserBundle>) {
   const router = getChatModel().withStructuredOutput(RouteSchema);
-  const goalPlanner = createGoalPlannerAgent(userId);
-  const cashFlowInterpreter = createCashFlowInterpreterAgent(userId);
+  const goalPlanner = createGoalPlannerAgent(getBundle);
+  const cashFlowInterpreter = createCashFlowInterpreterAgent(getBundle);
   const policyQA = createPolicyQAAgent();
 
   const graph = new StateGraph(OrchestratorState)

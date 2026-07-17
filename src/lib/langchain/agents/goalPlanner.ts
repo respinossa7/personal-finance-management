@@ -1,4 +1,5 @@
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import type { UserBundle } from "@/lib/repository/FinanceRepository";
 import { getChatModel } from "../model";
 import { createFinanceTools } from "../tools";
 
@@ -14,8 +15,8 @@ Format your replies in markdown: **bold** the key AED figures and dates so they'
  * The goal-translator specialist (deck Section 10). Reachable only through
  * the Orchestrator, never called directly by a route.
  */
-export function createGoalPlannerAgent(userId: string) {
-  const tools = createFinanceTools(userId);
+export function createGoalPlannerAgent(getBundle: () => Promise<UserBundle>) {
+  const tools = createFinanceTools(getBundle);
   return createReactAgent({
     llm: getChatModel(),
     tools: [tools.getRunwaySnapshot, tools.listCommitments, tools.computeGoalTradeoff],

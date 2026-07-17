@@ -1,4 +1,5 @@
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import type { UserBundle } from "@/lib/repository/FinanceRepository";
 import { getChatModel } from "../model";
 import { createFinanceTools } from "../tools";
 
@@ -14,8 +15,8 @@ Be concise and warm, not corporate. Speak in AED. Format replies in markdown: **
  * The forecast-into-meaning specialist (deck Section 10). Reachable only
  * through the Orchestrator, never called directly by a route.
  */
-export function createCashFlowInterpreterAgent(userId: string) {
-  const tools = createFinanceTools(userId);
+export function createCashFlowInterpreterAgent(getBundle: () => Promise<UserBundle>) {
+  const tools = createFinanceTools(getBundle);
   return createReactAgent({
     llm: getChatModel(),
     tools: [tools.getRunwaySnapshot, tools.listCommitments],
