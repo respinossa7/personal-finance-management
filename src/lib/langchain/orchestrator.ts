@@ -3,14 +3,15 @@ import { z } from "zod";
 import { getChatModel } from "./model";
 import { createGoalPlannerAgent } from "./agents/goalPlanner";
 import { createCashFlowInterpreterAgent } from "./agents/cashFlowInterpreter";
+import { createPolicyQAAgent } from "./agents/policyQA";
 
-const SPECIALISTS = ["goal_planner", "cash_flow_interpreter"] as const;
+const SPECIALISTS = ["goal_planner", "cash_flow_interpreter", "policy_qa"] as const;
 
 const RouteSchema = z.object({
   specialist: z
     .enum(SPECIALISTS)
     .describe(
-      "goal_planner: the customer is describing a life goal, wants a funded schedule, or is discussing an existing goal's trade-offs. cash_flow_interpreter: the customer is asking what's safe to spend, about their runway, or wants their commitments/forecast explained in plain language."
+      "goal_planner: the customer is describing a life goal, wants a funded schedule, or is discussing an existing goal's trade-offs. cash_flow_interpreter: the customer is asking what's safe to spend, about their runway, or wants their commitments/forecast explained in plain language. policy_qa: the customer is asking how the product works or what it guarantees — interest rates, undo windows, thresholds, subscription-cancellation rules, automation pause behavior — rather than asking about their own numbers."
     ),
 });
 
@@ -18,6 +19,7 @@ const ROUTER_PROMPT = `You are the Orchestrator for Wio Flow's Plan chat. You ne
 
 - goal_planner: the customer describes a life goal, wants a funded schedule, or is discussing an existing goal's trade-offs.
 - cash_flow_interpreter: the customer asks what's safe to spend, about runway, or wants their commitments/forecast explained in plain language.
+- policy_qa: the customer is asking how the product works or what it guarantees (rates, undo windows, thresholds, cancellation rules, pause behavior) rather than asking about their own account numbers.
 
 Consider the full conversation, not just the last message, and pick the specialist whose job matches what the customer needs right now.`;
 
@@ -28,14 +30,15 @@ const OrchestratorState = Annotation.Root({
 
 /**
  * The Orchestrator (deck Section 10/15): interprets, decides which single
- * specialist a turn needs, and merges the result back into one voice. Only
- * two specialists exist today (Goal Planner, Cash-Flow Interpreter); adding
- * a third is a new node plus a route-schema enum value, not a rewrite.
+ * specialist a turn needs, and merges the result back into one voice. Adding
+ * a third specialist is a new node plus a route-schema enum value, not a
+ * rewrite — policy_qa was added this way, alongside the original two.
  */
 export function createOrchestrator(userId: string) {
   const router = getChatModel().withStructuredOutput(RouteSchema);
   const goalPlanner = createGoalPlannerAgent(userId);
   const cashFlowInterpreter = createCashFlowInterpreterAgent(userId);
+  const policyQA = createPolicyQAAgent();
 
   const graph = new StateGraph(OrchestratorState)
     .addNode("classify_intent", async (state) => {
@@ -52,13 +55,20 @@ export function createOrchestrator(userId: string) {
       const result = await cashFlowInterpreter.invoke({ messages: state.messages });
       return { messages: result.messages.slice(priorCount) };
     })
+    .addNode("policy_qa", async (state) => {
+      const priorCount = state.messages.length;
+      const result = await policyQA.invoke({ messages: state.messages });
+      return { messages: result.messages.slice(priorCount) };
+    })
     .addEdge(START, "classify_intent")
     .addConditionalEdges("classify_intent", (state) => state.route, {
       goal_planner: "goal_planner",
       cash_flow_interpreter: "cash_flow_interpreter",
+      policy_qa: "policy_qa",
     })
     .addEdge("goal_planner", END)
-    .addEdge("cash_flow_interpreter", END);
+    .addEdge("cash_flow_interpreter", END)
+    .addEdge("policy_qa", END);
 
   return graph.compile();
 }
