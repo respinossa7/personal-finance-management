@@ -23,7 +23,27 @@ export function WaterfallControls() {
   }
 
   useEffect(() => {
-    refreshLatest();
+    let isActive = true;
+
+    const loadLatest = async () => {
+      try {
+        const res = await fetch("/api/waterfall/latest");
+        const data = await res.json();
+        if (isActive) {
+          setLatest(data);
+        }
+      } catch {
+        if (isActive) {
+          setLatest(null);
+        }
+      }
+    };
+
+    void loadLatest();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   async function simulate() {
