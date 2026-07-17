@@ -2,6 +2,7 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { FinanceRepository } from "@/lib/repository/FinanceRepository";
 import { PlanService, RunwayCalculator } from "@/domain";
+import { searchPolicyDocs } from "./rag";
 
 /**
  * The tool surface every specialist agent calls. Every number an agent says
@@ -73,4 +74,26 @@ export function createFinanceTools(userId: string) {
   );
 
   return { getRunwaySnapshot, listCommitments, computeGoalTradeoff };
+}
+
+/**
+ * Retrieval tool over the product-policy knowledge base (see ./rag). Not
+ * scoped to a user — policies are the same for every customer — so unlike
+ * `createFinanceTools` this needs no userId.
+ */
+export function createPolicySearchTool() {
+  return tool(
+    async ({ query }) => {
+      const results = await searchPolicyDocs(query);
+      return results.map((r) => `${r.title}: ${r.content}`).join("\n\n");
+    },
+    {
+      name: "search_product_policies",
+      description:
+        "Search Wio Flow's product-policy knowledge base (safe-to-spend rules, reversibility/undo windows, interest rates, thresholds, subscription-cancellation rules, automation pause behavior). Call this before answering any question about how the product works or what it guarantees — never answer a policy question from memory.",
+      schema: z.object({
+        query: z.string().describe("A natural-language description of the policy question to search for"),
+      }),
+    }
+  );
 }
