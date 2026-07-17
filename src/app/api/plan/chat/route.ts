@@ -26,7 +26,10 @@ export async function POST(req: NextRequest) {
   );
 
   const orchestrator = createOrchestrator(userId);
-  const result = await orchestrator.invoke({ messages });
+  const result = await orchestrator.invoke(
+    { messages },
+    { runName: "plan-chat", tags: ["plan-chat"], metadata: { userId } }
+  );
 
   const lastMessage = result.messages[result.messages.length - 1];
   const finalText = lastMessage?.text ?? "";

@@ -23,14 +23,17 @@ Hard rule: every AED figure, percentage, and date in the source message must app
  */
 export async function narrateInsight(insight: Insight): Promise<string> {
   const model = getChatModel().withStructuredOutput(NarratedInsightSchema);
-  const result = await model.invoke([
-    { role: "system", content: SYSTEM_PROMPT },
-    {
-      role: "user",
-      content: `Insight type: ${insight.type}\nSource message: ${insight.message}\nAttached action: ${
-        insight.action?.label ?? "none"
-      }`,
-    },
-  ]);
+  const result = await model.invoke(
+    [
+      { role: "system", content: SYSTEM_PROMPT },
+      {
+        role: "user",
+        content: `Insight type: ${insight.type}\nSource message: ${insight.message}\nAttached action: ${
+          insight.action?.label ?? "none"
+        }`,
+      },
+    ],
+    { runName: "insight-narrator", tags: ["insight-narrator", insight.type] }
+  );
   return result.message;
 }
